@@ -80,11 +80,20 @@ function App() {
   const getNewUsersList = (users: string): User[] => {
     return users.split(',').map((user: string) => {
       const [name, gender] = user.split(':')
+      const sanitizedGender = gender?.trim().toUpperCase()
       return {
-        name: name.trim(),
-        gender: gender.trim()
+        name: name?.trim(),
+        gender: ['F', 'M'].includes(sanitizedGender) ? sanitizedGender as 'F' | 'M' : null
       } as User
     })
+  }
+
+  const getListFromUsers = (users: User[]): string => {
+    const usersText = users.map((user: User) => {
+      const gender = user.gender ? `:${user.gender}` : ''
+      return `${user.name}${gender}`
+    })
+    return usersText.join(',')
   }
 
   useEffect(() => {
@@ -166,6 +175,7 @@ function App() {
   const addUsersHandler = () => {
     if (!addingUsers) {
       setAddingUsers(true)
+      setNewUsersText(getListFromUsers(users))
     } else {
       setUsers(getRandomSort([...getUsersWithEmojis(getNewUsersList(newUsersText))]))
       setAddingUsers(false)
@@ -276,9 +286,20 @@ function App() {
       </Collapse>
 
       <Collapse in={addingUsers}>
-        <Box sx={{ backgroundColor: "whitesmoke" }}>
-          <TextField value={newUsersText} onChange={(e) => { setNewUsersText(e.target.value) }}></TextField>
-        </Box>
+        <TextField
+          value={newUsersText}
+          multiline
+          rows={4}
+          onChange={(e) => { setNewUsersText(e.target.value) }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              color: "#fff",
+              "& .MuiOutlinedInput-notchedOutline": {
+                borderColor: "whitesmoke",
+                borderWidth: "2px",
+              },
+            },
+          }}></TextField>
       </Collapse>
 
     </Box>
