@@ -216,7 +216,7 @@ function App() {
   }
 
   return (
-    <Box display="flex" flexDirection="column" width="350px" rowGap={1}>
+    <Box display="flex" flexDirection="column" width="360px" rowGap={1}>
 
       {/* Current user */}
       <Collapse appear in={currentUserIndex !== -1}>
