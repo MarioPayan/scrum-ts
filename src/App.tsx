@@ -14,6 +14,8 @@ import {
   TextField,
   Typography
 } from '@mui/material'
+import ConfettiExplosion from 'react-confetti-explosion';
+import getRandomGifUrl, { getDefaultGifUrl } from './giphyClient';
 
 const ANIMATION_TIME = 250
 
@@ -58,6 +60,9 @@ function App() {
   const [isDone, setIsDone] = useState<boolean>(false)
   const [addingUsers, setAddingUsers] = useState<boolean>(false)
   const [newUsersText, setNewUsersText] = useState<string>('')
+  const [gifUrl, setGifUrl] = useState<string>('')
+  const [confetti, setConfetti] = useState<boolean>(true)
+  const [giphyRateLimitExceeded, setGiphyRateLimitExceeded] = useState<boolean>(false)
 
   const getUsersWithEmojis = (users: User[]): User[] => {
     const getRandomEmoji = (gender?: 'M' | 'F'): string => {
@@ -98,6 +103,15 @@ function App() {
 
   useEffect(() => {
     setUsers(getRandomSort([...getUsersWithEmojis(userList)]))
+    getRandomGifUrl().then((url) => {
+      if (url) {
+        setGifUrl(url)
+        setGiphyRateLimitExceeded(false)
+      } else {
+        setGifUrl(getDefaultGifUrl())
+        setGiphyRateLimitExceeded(true)
+      }
+    })
   }, [])
 
   useEffect(() => {
@@ -108,6 +122,10 @@ function App() {
   useEffect(() => {
     setNextUsersList(getNextUsersList())
   }, [currentUserIndex, users])
+
+  useEffect(() => {
+    setConfetti(true)
+  }, [isDone])
 
   const getRandomSort = (list: User[]): User[] => {
     const array = [...list];
@@ -211,7 +229,28 @@ function App() {
 
   if (isDone) {
     return (
-      <Typography paddingTop={5} variant="h3">Done!</Typography>
+      <Box display="flex" gap={4} paddingTop={5} flexDirection="column" justifyContent="center" position="relative">
+        <Typography variant="h3" sx={{ textAlign: "center" }}>Done!</Typography>
+        {giphyRateLimitExceeded && (
+          <>
+            <Typography variant="subtitle2" sx={{ textAlign: "center" }}>
+              Giphy API rate limit exceeded ¯\_(ツ)_/¯
+            </Typography>
+            <Typography variant="subtitle2" sx={{ textAlign: "center" }}>
+              Enjoy the confetti!
+            </Typography></>
+        )}
+        {gifUrl && (
+          <Box display="flex" justifyContent="center">
+            <img src={gifUrl} alt="Gif" style={{ maxWidth: "360px" }} />
+          </Box>
+        )}
+        {confetti &&
+          <ConfettiExplosion
+            particleCount={175}
+            style={{ position: "absolute", top: "50%", left: "50%" }}
+            onComplete={() => setConfetti(false)} />}
+      </Box>
     )
   }
 
