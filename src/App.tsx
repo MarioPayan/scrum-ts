@@ -43,6 +43,7 @@ const userList: User[] = [
   { gender: 'F', name: 'Olivia' },
   { gender: 'M', name: 'Devin' },
   { gender: 'M', name: 'Mitch' },
+  { gender: 'F', name: 'Jess' },
   // { gender: 'M', name: 'Kurk' },
   // { gender: 'F', name: 'Sarah' },
 ]
