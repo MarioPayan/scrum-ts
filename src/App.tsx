@@ -16,37 +16,9 @@ import {
 } from '@mui/material'
 import ConfettiExplosion from 'react-confetti-explosion';
 import getRandomGifUrl, { getDefaultGifUrl } from './giphyClient';
+import { emojis, User, userList } from './data';
 
 const ANIMATION_TIME = 250
-
-type User = {
-  name: string
-  gender?: 'M' | 'F'
-  icon?: string
-}
-
-const emojis = {
-  M: ['🙍‍♂️', '🙎‍♂️', '🙅‍♂️', '🙆‍♂️', '💁‍♂️', '🙋‍♂️', '🧏‍♂️', '🙇‍♂️', '🤦‍♂️', '🤷‍♂️', '👨‍⚕️', '👨‍🎓', '👨‍🏫', '👨‍⚖️', '👨‍🌾', '👨‍🍳', '👨‍🔧', '👨‍🏭', '👨‍💼', '👨‍🔬', '👨‍💻', '👨‍🎤', '👨‍🎨', '👨‍✈️', '👨‍🚀', '👨‍🚒', '👮‍♂️', '🕵️‍♂️', '💂‍♂️', '👷‍♂️', '🤴', '🤵‍♂️', '👰‍♂️', '🤶', '🦸‍♂️', '🦹‍♂️', '🧙‍♂️', '🧚‍♂️', '🧛‍♂️', '🧜‍♂️', '🧝‍♂️', '🧞‍♂️', '🧟‍♂️',],
-  F: ['🙍‍♀️', '🙎‍♀️', '🙅‍♀️', '🙆‍♀️', '💁‍♀️', '🙋‍♀️', '🧏‍♀️', '🙇‍♀️', '🤦‍♀️', '🤷‍♀️', '👩‍⚕️', '👩‍🎓', '👩‍🏫', '👩‍⚖️', '👩‍🌾', '👩‍🍳', '👩‍🔧', '👩‍🏭', '👩‍💼', '👩‍🔬', '👩‍💻', '👩‍🎤', '👩‍🎨', '👩‍✈️', '👩‍🚀', '👩‍🚒', '👮‍♀️', '🕵️‍♀️', '💂‍♀️', '👷‍♀️', '👸', '🤵‍♀️', '👰‍♀️', '🧑‍🎄', '🦸‍♀️', '🦹‍♀️', '🧙‍♀️', '🧚‍♀️', '🧛‍♀️', '🧜‍♀️', '🧝‍♀️', '🧞‍♀️', '🧟‍♀️',]
-}
-
-const userList: User[] = [
-  { gender: 'M', name: 'Mario' },
-  { gender: 'M', name: 'Kevin' },
-  { gender: 'M', name: 'Josh Nicks' },
-  { gender: 'M', name: 'Karim' },
-  { gender: 'F', name: 'Sharon' },
-  { gender: 'F', name: 'Alison' },
-  { gender: 'F', name: 'Abika' },
-  { gender: 'M', name: 'Josh Moon' },
-  { gender: 'F', name: 'Jess Ribbens' },
-  { gender: 'F', name: 'Olivia' },
-  { gender: 'M', name: 'Devin' },
-  { gender: 'M', name: 'Mitch' },
-  { gender: 'F', name: 'Jess Star' },
-  // { gender: 'M', name: 'Kurk' },
-  // { gender: 'F', name: 'Sarah' },
-]
 
 function App() {
   const [users, setUsers] = useState<User[]>([])
@@ -99,7 +71,7 @@ function App() {
       const gender = user.gender ? `:${user.gender}` : ''
       return `${user.name}${gender}`
     })
-    return usersText.join(',')
+    return usersText.join(',\n')
   }
 
   useEffect(() => {
@@ -194,7 +166,7 @@ function App() {
   const addUsersHandler = () => {
     if (!addingUsers) {
       setAddingUsers(true)
-      setNewUsersText(getListFromUsers(users))
+      setNewUsersText(getListFromUsers(userList))
     } else {
       setUsers(getRandomSort([...getUsersWithEmojis(getNewUsersList(newUsersText))]))
       setAddingUsers(false)
@@ -329,11 +301,12 @@ function App() {
         <TextField
           value={newUsersText}
           multiline
-          rows={4}
+          rows={8}
           onChange={(e) => { setNewUsersText(e.target.value) }}
           sx={{
             "& .MuiOutlinedInput-root": {
               color: "#fff",
+              fontSize: "0.8rem",
               "& .MuiOutlinedInput-notchedOutline": {
                 borderColor: "whitesmoke",
                 borderWidth: "2px",
